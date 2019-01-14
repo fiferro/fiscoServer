@@ -86,7 +86,8 @@ router.post("/users", function (req, res) {
                 res.status(200).json({
                   'return': 'home.html',
                   'hash': hashcode, 
-                  'status': 'success'
+                  'status': 'success', 
+                  'user': returns
                 });
               });
           });
