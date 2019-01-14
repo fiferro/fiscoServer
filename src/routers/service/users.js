@@ -57,7 +57,9 @@ router.post("/users/login", function (req, res) {
           .then(function (returns) {
             res.status(200).json({
               'return': 'home.html',
-              'hash': hashcode
+              'hash': hashcode, 
+              'status': 'success', 
+              'user': rows
             });
           });
       }
