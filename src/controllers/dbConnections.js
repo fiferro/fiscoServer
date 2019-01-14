@@ -44,7 +44,7 @@ function deleteSql(insert) {
 }
 
 function Hash(hash) {
-  var userQuery = "select * from UsersLog where logHash = '" + hash + "'";
+  var userQuery = "select * from fis_usuario_log where logHash = '" + hash + "'";
   return Promise.using(getSqlConnection(), function (connection) {
     return connection.queryAsync(userQuery);
   });

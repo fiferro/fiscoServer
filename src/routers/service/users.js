@@ -41,17 +41,18 @@ router.get("/users", function (req, res) {
 
 
 router.post("/users/login", function (req, res) {
-  let usuario = req.body.usuario;
-  let pass = md5(req.body.pass);
-  var userQuery = "select * from Users where email = '" + usuario + "' and password = '" + pass + "'";
+  let usuario = req.body.email;
+  let pass = md5(req.body.senha);
+  var userQuery = "select * from fis_usuario where email = '" + usuario + "' and senha = '" + pass + "'";
   return querySql(userQuery, '')
     .then(function (rows) {
       if (rows.length == 0) {
         res.status(500).json({ 'return': '0' });
       }
       else {
-        let hashcode = passwordHash.generate(req.body.usuario + req.body.pass)
-        var userInsert = "INSERT INTO UsersLog (logHash) VALUES ('" + hashcode + "')";
+        let hashcode = passwordHash.generate(usuario + req.body.senha) 
+        console.log(hashcode);
+        var userInsert = "INSERT INTO fis_usuario_log (id_usuario, logHash) VALUES ('"+ rows.id_usuario + "','" + hashcode + "')";
         return db.insertSql(userInsert)
           .then(function (returns) {
             res.status(200).json({
@@ -65,17 +66,30 @@ router.post("/users/login", function (req, res) {
 
 
 router.post("/users", function (req, res) {
-  return db.Hash(req.headers.authorization)
-    .then(function (valid) {
-      if (valid.length == 0) {
-        res.status(500).json('unauthorized');
-      }
-      else {
-        var userInsert = "INSERT INTO Users (name, email, password) VALUES ('" + req.body.name + "','" + req.body.email + "','" + passwordHash.generate(req.body.pass) + "')";
+
+  let usuario = req.body.email;
+  let pass =md5(req.body.senha)
+  var userQuery = "select * from fis_usuario where email = '" + usuario + "'";
+  return querySql(userQuery, '')
+    .then(function (rows) {
+      if (rows.length == 0) {
+        var userInsert = "INSERT INTO fis_usuario (nome, cpf, telefone, email, senha, dt_nascimento, sexo) VALUES ("
+        userInsert +=  "'" + req.body.nome + "','" + req.body.cpf + "','" + req.body.tel + "','" + req.body.email + "','" + pass + "','" + req.body.dtnasc + "','" + req.body.sexo + "')";
         return db.insertSql(userInsert)
           .then(function (returns) {
-            res.status(200).json({ returns });
+            let hashcode = passwordHash.generate(usuario + req.body.senha) 
+            var userInsert = "INSERT INTO fis_usuario_log (id_usuario, logHash) VALUES ('"+ returns.insertId + "','" + hashcode + "')";
+            return db.insertSql(userInsert)
+              .then(function (returns) {
+                res.status(200).json({
+                  'return': 'home.html',
+                  'hash': hashcode
+                });
+              });
           });
+      }
+      else {
+        res.status(200).json({'return': 'usuário já existente '})
       }
     });
 });
