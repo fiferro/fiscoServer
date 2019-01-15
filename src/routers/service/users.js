@@ -49,8 +49,9 @@ router.get("/users/login", function (req, res) {
         var userQuery = "SELECT * FROM fis_usuario_log fl  inner join fis_usuario fu on fu.id_usuario = fl.id_usuario where fl.logHash = '"+ req.headers.authorization +"'";
         return querySql(userQuery, '', req.headers.authorization)
           .then(function (rows) {
+            console.log(userQuery)
             res.status(200).json({
-              'hash': hashcode, 
+              'hash': req.headers.authorization, 
               'status': 'success', 
               'user': rows
             });
@@ -73,8 +74,7 @@ router.post("/users/login", function (req, res) {
       }
       else {
         let hashcode = passwordHash.generate(usuario + req.body.senha) 
-        console.log(hashcode);
-        var userInsert = "INSERT INTO fis_usuario_log (id_usuario, logHash) VALUES ('"+ rows.id_usuario + "','" + hashcode + "')";
+        var userInsert = "INSERT INTO fis_usuario_log (id_usuario, logHash) VALUES ('"+ rows[0].id_usuario + "','" + hashcode + "')";
         return db.insertSql(userInsert)
           .then(function (returns) {
             res.status(200).json({
