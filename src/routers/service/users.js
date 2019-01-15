@@ -39,6 +39,28 @@ router.get("/users", function (req, res) {
     })
 });
 
+router.get("/users/login", function (req, res) {
+  return db.Hash(req.headers.authorization)
+    .then(function (valid) {
+      if (valid.length == 0) {
+        res.status(500).json('unauthorized');
+      }
+      else {
+        var userQuery = "SELECT * FROM fis_usuario_log fl  inner join fis_usuario fu on fu.id_usuario = fl.id_usuario where fl.logHash = '"+ req.headers.authorization +"'";
+        return querySql(userQuery, '', req.headers.authorization)
+          .then(function (rows) {
+            res.status(200).json({
+              'hash': hashcode, 
+              'status': 'success', 
+              'user': rows
+            });
+          });
+      }
+
+
+    })
+});
+
 
 router.post("/users/login", function (req, res) {
   let usuario = req.body.email;
