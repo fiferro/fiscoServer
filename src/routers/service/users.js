@@ -47,9 +47,9 @@ router.get("/users/login", function (req, res) {
       }
       else {
         var userQuery = "SELECT * FROM fis_usuario_log fl  inner join fis_usuario fu on fu.id_usuario = fl.id_usuario where fl.logHash = '"+ req.headers.authorization +"'";
+        
         return querySql(userQuery, '', req.headers.authorization)
           .then(function (rows) {
-            console.log(userQuery)
             res.status(200).json({
               'hash': req.headers.authorization, 
               'status': 'success', 
@@ -128,10 +128,11 @@ router.patch("/users", function (req, res) {
         res.status(500).json('unauthorized');
       }
       else {
-        var userInsert = "update Users set name = '" + req.body.name + "',email = '" + req.body.email + "', password = '" + req.body.pass + "' where idUser = " + req.body.idUser;
+        console.log(req.body);
+        var userInsert = "update fis_usuario set nome = '" + req.body.nome + "',email = '" + req.body.email + "', cpf = '" + req.body.cpf + "', telefone = '" + req.body.telefone + "' where id_usuario = " + req.body.id_user;
         return db.insertSql(userInsert)
           .then(function (returns) {
-            res.status(200).json({ returns });
+            res.status(200).json({ 'status': 'success' });
           });
       }
     });
