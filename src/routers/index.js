@@ -29,6 +29,8 @@ router.get('/', function (req, res, next) {
 
 
 router.use('/fisco', require('./service/users'));
+router.use('/empresa', require('./service/empresa'));
+
 
 
 module.exports = router;
