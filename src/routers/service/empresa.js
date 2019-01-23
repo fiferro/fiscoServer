@@ -92,7 +92,7 @@ router.post("/empresa", function (req, res) {
                 return db.insertSql(userInsert)
                     .then(function (returns) {
                         var userInsert = "INSERT INTO fis_empresa_usuario (	id_empresa, id_usuario, tipo_pagamento, valor) VALUES ('"
-                        userInsert += returns.insertId + "','" + req.body.id + "','" + req.body.tpPag + "','" + req.body.vlr + "')";
+                        userInsert += returns.insertId + "','" + req.body.id + "','" + req.body.tpPag + "','" + req.body.vlr.replace(',', '.') + "')";
                         return db.insertSql(userInsert)
                             .then(function (returns) {
                                 res.status(200).json({
@@ -103,7 +103,7 @@ router.post("/empresa", function (req, res) {
             }
             else {
                 var userInsert = "INSERT INTO fis_empresa_usuario (	id_empresa, id_usuario, tipo_pagamento, valor) VALUES ('"
-                userInsert += rows[0].id_empresa + "','" + req.body.id + "','" + req.body.tpPag + "','" + req.body.vlr + "')";
+                userInsert += rows[0].id_empresa + "','" + req.body.id + "','" + req.body.tpPag + "','" + req.body.vlr.replace(',', '.') + "')";
                 return db.insertSql(userInsert)
                     .then(function (returns) {
                         res.status(200).json({
@@ -232,7 +232,7 @@ router.patch("/empresa", function (req, res) {
                 res.status(500).json('unauthorized');
             }
             else {
-                var userInsert = "update fis_empresa_usuario set tipo_pagamento = '" + req.body.tipo_pagamento + "', valor = '" + req.body.valor + "' where id_empresa_usuario = " + req.body.id_empresa_usuario;
+                var userInsert = "update fis_empresa_usuario set tipo_pagamento = '" + req.body.tipo_pagamento + "', valor = '" + req.body.valor.replace(',','.') + "' where id_empresa_usuario = " + req.body.id_empresa_usuario;
                 return db.insertSql(userInsert)
                     .then(function (returns) {
                         res.status(200).json({ 'status': 'success' });
