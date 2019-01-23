@@ -205,6 +205,25 @@ router.patch("/empresa/minha", function (req, res) {
         });
 });
 
+router.patch("/empresa/aliquota", function (req, res) {
+
+    var userInsert = "update fis_usuario_empresa set "
+    userInsert += "atc = '" + req.body.atc + "',"
+    userInsert += "pis = '" + req.body.pis + "',"
+    userInsert += "cofins = '" + req.body.cofins + "',"
+    userInsert += "inss = '" + req.body.inss + "',"
+    userInsert += "ir = '" + req.body.ir + "',"
+    userInsert += "csll = '" + req.body.csll + "',"
+    userInsert += "atv	 = '" + req.body.atv + "'"
+    userInsert += "where id_usuario_emp	 = " + req.body.id_usuario_emp	;
+    return db.insertSql(userInsert)
+        .then(function (returns) {
+            res.status(200).json({ 'status': 'success' });
+
+        });
+});
+
+
 router.patch("/empresa", function (req, res) {
     return db.Hash(req.headers.authorization)
         .then(function (valid) {
