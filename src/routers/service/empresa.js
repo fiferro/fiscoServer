@@ -208,14 +208,15 @@ router.patch("/empresa/minha", function (req, res) {
 router.patch("/empresa/aliquota", function (req, res) {
 
     var userInsert = "update fis_usuario_empresa set "
-    userInsert += "atc = '" + req.body.atc + "',"
-    userInsert += "pis = '" + req.body.pis + "',"
-    userInsert += "cofins = '" + req.body.cofins + "',"
-    userInsert += "inss = '" + req.body.inss + "',"
-    userInsert += "ir = '" + req.body.ir + "',"
-    userInsert += "csll = '" + req.body.csll + "',"
+    userInsert += "atc = '" + req.body.atc.replace(',','.') + "',"
+    userInsert += "pis = '" + req.body.pis.replace(',','.')  + "',"
+    userInsert += "cofins = '" + req.body.cofins.replace(',','.')  + "',"
+    userInsert += "inss = '" + req.body.inss.replace(',','.')  + "',"
+    userInsert += "ir = '" + req.body.ir.replace(',','.')  + "',"
+    userInsert += "csll = '" + req.body.csll.replace(',','.')  + "',"
     userInsert += "atv	 = '" + req.body.atv + "'"
     userInsert += "where id_usuario_emp	 = " + req.body.id_usuario_emp	;
+    console.log(userInsert);
     return db.insertSql(userInsert)
         .then(function (returns) {
             res.status(200).json({ 'status': 'success' });
